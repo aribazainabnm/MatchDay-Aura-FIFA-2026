@@ -1,0 +1,16 @@
+{
+  "project_name": "MatchDay Aura",
+  "hackathon_challenge": "Challenge 4 - Smart Stadiums & Tournament Operations",
+  "target_event": "FIFA World Cup 2026",
+  "ai_engine": {
+    "provider": "Google GenAI",
+    "model_brain": "gemini-1.5-pro",
+    "framework": "Google AI Studio SDK",
+    "features_enabled": [
+      "Multilingual Auto-detection",
+      "Dynamic Accessibility Routing",
+      "Real-time Crowd Mitigation Protocols"
+    ]
+  },
+  "deployment_target": "Mobile Viewport Low-Bandwidth Web Overlay"
+}
