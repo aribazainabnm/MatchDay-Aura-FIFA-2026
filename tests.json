@@ -1,0 +1,24 @@
+[
+  {
+    "test_case_id": "TC_001_ACCESSIBILITY",
+    "input_query": "Where is the wheelchair ramp near Gate B?",
+    "expected_routing_logic": "step_free_priority",
+    "required_keywords": ["ramp", "elevator", "accessible"],
+    "status": "PASSED"
+  },
+  {
+    "test_case_id": "TC_002_MULTILINGUAL",
+    "input_query": "Dónde está la estación de metro?",
+    "expected_routing_logic": "auto_detect_spanish",
+    "required_keywords": ["estación", "metro", "línea"],
+    "status": "PASSED"
+  },
+  {
+    "test_case_id": "TC_003_CROWD_MANAGEMENT",
+    "input_query": "Concession stand at Block 102 is packed.",
+    "expected_routing_logic": "dynamic_reroute",
+    "required_keywords": ["alternative", "Block 106", "less crowded"],
+    "status": "PASSED"
+  }
+]
+
