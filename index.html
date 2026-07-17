@@ -36,7 +36,7 @@
             <button type="submit" aria-label="Send Message Button">Send</button>
         </form>
     </main>
-                <script>
+                    <script>
         document.querySelector('.input-area').addEventListener('submit', function(e) {
             e.preventDefault();
             const input = document.getElementById('stadium-query-input');
@@ -59,14 +59,14 @@
                 const botMsg = document.createElement('div');
                 botMsg.className = 'msg bot';
                 
-                // Normalize to remove accents (e.g. 'baño' -> 'bano')
+                // Normalize to remove accents safely (e.g. 'baño' -> 'bano')
                 const lowerQuery = query.toLowerCase()
                     .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-                // Detect Language
+                // Language detection using exact word boundaries (\b)
                 let lang = 'en'; // default
-                const spanishKeywords = /bano|donde|esta|bloque|comida|rampa|ascensor|silla|puerta|por|favor|gracias/;
-                const hindiKeywords = /raasta|rasta|kidhar|kahan|hai|he|khana|shauchalay|bhook|idhar|se|batao|शौचालय|खाना|कैंटीन|सीढ़ी/;
+                const spanishKeywords = /\b(donde|esta|bloque|comida|rampa|ascensor|silla|puerta|por|favor|gracias|bano|banos)\b/;
+                const hindiKeywords = /\b(raasta|rasta|kidhar|kahan|hai|he|khana|shauchalay|bhook|idhar|se|batao|ko)\b|शौचालय|खाना|कैंटीन|सीढ़ी/;
                 
                 if (spanishKeywords.test(lowerQuery)) {
                     lang = 'es';
@@ -75,13 +75,17 @@
                 }
 
                 // Match Intent
-                const isRestroom = /bathroom|restroom|washroom|bano|sanitario|toilet|shauchalay|शौचालय/.test(lowerQuery);
-                const isFood = /food|concession|canteen|nacho|comida|khana|bhook|bhojan|कैंटीन|खाना|raasta|rasta/.test(lowerQuery);
-                const isAccessibility = /wheelchair|ramp|accessible|elevator|lift|silla|rampa|ascensor|discapacidad|sidhi|सीढ़ी/.test(lowerQuery);
+                const isRestroom = /\b(bathroom|restroom|washroom|bano|sanitario|toilet|shauchalay)\b|शौचालय/.test(lowerQuery);
+                const isFood = /\b(food|concession|canteen|nacho|comida|khana|bhook|bhojan|raasta|rasta)\b|कैंटीन|खाना/.test(lowerQuery);
+                const isAccessibility = /\b(wheelchair|ramp|accessible|elevator|lift|silla|rampa|ascensor|discapacidad|sidhi)\b|सीढ़ी/.test(lowerQuery);
+
+                // Safe Block Detection (checking for actual words/letters, not substrings inside other words)
+                const mentionsBlockA = /\b(block a|bloque a|gate a|puerta a|a)\b/.test(lowerQuery);
+                const mentionsBlockC = /\b(block c|bloque c|gate c|puerta c|c)\b/.test(lowerQuery);
 
                 // Build localized response
                 if (isRestroom) {
-                    if (lowerQuery.includes('a')) {
+                    if (mentionsBlockA) {
                         if (lang === 'es') {
                             botMsg.innerHTML = "🚻 <b>[Baños del Bloque A]</b><br>Los baños más cercanos están al lado de la Puerta A, cerca de la Sección 102.";
                         } else if (lang === 'hi') {
@@ -89,7 +93,7 @@
                         } else {
                             botMsg.innerHTML = "🚻 <b>[Block A Restrooms]</b><br>The nearest toilets are right next to Gate A, near Section 102.";
                         }
-                    } else if (lowerQuery.includes('c')) {
+                    } else if (mentionsBlockC) {
                         if (lang === 'es') {
                             botMsg.innerHTML = "🚻 <b>[Baños del Bloque C]</b><br>Los baños más cercanos están detrás de la Sección 112 en el nivel principal.";
                         } else if (lang === 'hi') {
