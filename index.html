@@ -36,7 +36,7 @@
             <button type="submit" aria-label="Send Message Button">Send</button>
         </form>
     </main>
-        <script>
+            <script>
         document.querySelector('.input-area').addEventListener('submit', function(e) {
             e.preventDefault();
             const input = document.getElementById('stadium-query-input');
@@ -54,39 +54,64 @@
             input.value = '';
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-            // 2. Multi-lingual response matcher
+            // 2. Multilingual regex-based matching
             setTimeout(() => {
                 const botMsg = document.createElement('div');
                 botMsg.className = 'msg bot';
                 
-                const lowerQuery = query.toLowerCase();
-                
-                // RESTROOMS / BATHROOMS / BAÑOS
-                if (lowerQuery.includes('bathroom') || lowerQuery.includes('restroom') || lowerQuery.includes('bano') || lowerQuery.includes('baño')) {
-                    if (lowerQuery.includes('c')) {
-                        botMsg.textContent = "🚻 [Block C] The nearest restrooms are located directly behind Section 112 on the main concourse level. To the left of the concession stand! / Los baños más cercanos están detrás de la Sección 112.";
+                // Normalize and clean text to make matching foolproof
+                const lowerQuery = query.toLowerCase()
+                    .normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Removes accents (ñ becomes n, á becomes a)
+
+                // Matchers
+                const isRestroom = /bathroom|restroom|washroom|bano|sanitario|toilet|shauchalay|शौचालय/.test(lowerQuery);
+                const isFood = /food|concession|canteen|nacho|comida|khana|bhook|bhojan|कैंटीन|खाना|रास्ता|raasta|rasta/.test(lowerQuery);
+                const isAccessibility = /wheelchair|ramp|accessible|elevator|lift|silla|rampa|ascensor|discapacidad|sidhi|सीढ़ी/.test(lowerQuery);
+
+                // Contextual replies
+                if (isRestroom) {
+                    if (lowerQuery.includes('a')) {
+                        botMsg.innerHTML = "🚻 <b>[Block A Restrooms]</b><br>" +
+                            "• <b>EN:</b> Nearest toilets are right next to Gate A, near Section 102.<br>" +
+                            "• <b>ES:</b> Los baños más cercanos están al lado de la Puerta A, cerca de la Sección 102.<br>" +
+                            "• <b>HI:</b> शौचालय गेट ए के पास, सेक्शन 102 के बगल में हैं।";
+                    } else if (lowerQuery.includes('c')) {
+                        botMsg.innerHTML = "🚻 <b>[Block C Restrooms]</b><br>" +
+                            "• <b>EN:</b> Behind Section 112 on the main concourse level.<br>" +
+                            "• <b>ES:</b> Detrás de la Sección 112 en el nivel principal.<br>" +
+                            "• <b>HI:</b> मुख्य स्तर पर सेक्शन 112 के ठीक पीछे।";
                     } else {
-                        botMsg.textContent = "🚻 Dedicated restrooms are situated on every concourse level near sections 104, 112, and 124. All facilities include accessible units. / Los baños están cerca de las secciones 104, 112 y 124.";
+                        botMsg.innerHTML = "🚻 <b>[Restrooms]</b><br>" +
+                            "• <b>EN:</b> Facilities are located near Sections 104, 112, and 124.<br>" +
+                            "• <b>ES:</b> Los baños están cerca de las secciones 104, 112 y 124.<br>" +
+                            "• <b>HI:</b> शौचालय सेक्शन 104, 112 और 124 के पास उपलब्ध हैं।";
                     }
                 } 
-                // ACCESSIBILITY / WHEELCHAIRS
-                else if (lowerQuery.includes('wheelchair') || lowerQuery.includes('ramp') || lowerQuery.includes('accessible') || lowerQuery.includes('rampa') || lowerQuery.includes('silla')) {
-                    botMsg.textContent = "♿ Step-free route active! Head to Concourse Zone 2. Use the elevator next to Block 104 to reach the level-1 seating directly. Avoid the Gate B stairs.";
+                else if (isFood) {
+                    botMsg.innerHTML = "🍔 <b>[Canteen / Food]</b><br>" +
+                        "• <b>EN:</b> Gate C concessions have long lines! Walk 50m to Block 108 kiosks—they have zero wait time.<br>" +
+                        "• <b>ES:</b> ¡Evita la Puerta C! Los quioscos del Bloque 108 no tienen fila en este momento.<br>" +
+                        "• <b>HI:</b> गेट सी कैंटीन पर भारी भीड़ है। ब्लॉक 108 काउंटरों पर जाएँ, वहाँ बिल्कुल लाइन नहीं है।";
                 } 
-                // FOOD / CROWDS
-                else if (lowerQuery.includes('crowd') || lowerQuery.includes('line') || lowerQuery.includes('food') || lowerQuery.includes('nacho') || lowerQuery.includes('comida')) {
-                    botMsg.textContent = "🍔 Congestion alert! Gate C concessions are backed up. Walk 50m left to the Block 108 kiosks—they currently have zero wait time.";
+                else if (isAccessibility) {
+                    botMsg.innerHTML = "♿ <b>[Accessibility / Step-Free]</b><br>" +
+                        "• <b>EN:</b> Step-free route active! Use the elevator next to Block 104 to avoid stairs.<br>" +
+                        "• <b>ES:</b> ¡Ruta sin escaleras activa! Use el ascensor junto al Bloque 104.<br>" +
+                        "• <b>HI:</b> सुगम मार्ग चालू है! सीढ़ियों से बचने के लिए ब्लॉक 104 के पास लिफ्ट का उपयोग करें।";
                 } 
-                // GENERAL FALLBACK
                 else {
-                    botMsg.textContent = "👋 MatchDay Aura here! I've logged your query. To protect your network bandwidth in the stadium, I'm routing this via our ultra-light operational protocol. How else can I assist? / ¡Hola! He registrado tu consulta.";
+                    botMsg.innerHTML = "👋 <b>MatchDay Aura</b><br>" +
+                        "• <b>EN:</b> Route optimization active. Ask about restrooms, canteens, or wheelchair access!<br>" +
+                        "• <b>ES:</b> Pregúntame sobre baños, comida o accesos para sillas de ruedas.<br>" +
+                        "• <b>HI:</b> मुझसे शौचालय, कैंटीन या व्हीलचेयर मार्ग के बारे में पूछें।";
                 }
                 
                 messagesContainer.appendChild(botMsg);
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             }, 800);
         });
-        </script>
+            </script>
+    
     
 </body>
 </html>
