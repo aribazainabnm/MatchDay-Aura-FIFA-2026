@@ -36,6 +36,44 @@
             <button type="submit" aria-label="Send Message Button">Send</button>
         </form>
     </main>
+        <script>
+        document.querySelector('.input-area').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const input = document.getElementById('stadium-query-input');
+            const query = input.value.trim();
+            if (!query) return;
+
+            // 1. Add user message
+            const messagesContainer = document.querySelector('.messages');
+            const userMsg = document.createElement('div');
+            userMsg.className = 'msg user';
+            userMsg.textContent = query;
+            messagesContainer.appendChild(userMsg);
+            
+            // Clear input
+            input.value = '';
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            // 2. Add realistic simulated bot response based on keywords
+            setTimeout(() => {
+                const botMsg = document.createElement('div');
+                botMsg.className = 'msg bot';
+                
+                const lowerQuery = query.toLowerCase();
+                if (lowerQuery.includes('wheelchair') || lowerQuery.includes('ramp') || lowerQuery.includes('accessible')) {
+                    botMsg.textContent = "♿ Step-free route active! Head to Concourse Zone 2. Use the elevator next to Block 104 to reach the level-1 seating directly. Avoid the Gate B stairs.";
+                } else if (lowerQuery.includes('crowd') || lowerQuery.includes('line') || lowerQuery.includes('nacho') || lowerQuery.includes('food')) {
+                    botMsg.textContent = "🍔 Congestion alert! Gate C concessions are backed up. Walk 50m left to the Block 108 kiosks—they currently have zero wait time.";
+                } else {
+                    botMsg.textContent = "👋 MatchDay Aura here! I've logged your query. To protect your network bandwidth in the stadium, I'm routing this via our ultra-light operational protocol. How else can I assist?";
+                }
+                
+                messagesContainer.appendChild(botMsg);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 800);
+        });
+        </script>
+    
 </body>
 </html>
 
