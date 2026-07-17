@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MatchDay Aura - Accessibility-first FIFA 2026 Smart Stadium Concierge">
     <title>MatchDay Aura - Smart Stadium Concierge</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0b0f19; color: #ffffff; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0b0f19; color: #f8fafc; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         .chat-container { width: 100%; max-width: 400px; background: #131a26; border-radius: 16px; border: 1px solid #222f47; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
         .header { background: #1e293b; padding: 16px; text-align: center; border-bottom: 1px solid #222f47; }
         .header h1 { margin: 0; font-size: 1.2rem; color: #38bdf8; }
@@ -16,25 +17,25 @@
         .input-area { display: flex; border-top: 1px solid #222f47; padding: 12px; background: #0f172a; gap: 8px; }
         input { flex: 1; background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 10px; color: white; }
         button { background: #0284c7; border: none; padding: 10px 16px; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; }
-        aria-label { display: none; }
     </style>
 </head>
 <body>
-    <div class="chat-container" role="main" aria-label="MatchDay Aura Assistant Interface">
-        <div class="header">
+    <main class="chat-container" role="main" aria-label="MatchDay Aura Assistant Interface">
+        <header class="header">
             <h1>⚽ MatchDay Aura</h1>
-            <small style="color: #94a3b8;">FIFA 2026 Smart Concierge</small>
-        </div>
-        <div class="messages" aria-live="polite">
+            <p style="color: #94a3b8; margin: 4px 0 0 0; font-size: 0.8rem;">FIFA 2026 Smart Concierge</p>
+        </header>
+        <section class="messages" aria-live="polite" aria-label="Chat Message History">
             <div class="msg bot">👋 Welcome to the FIFA World Cup 2026! I am MatchDay Aura, your stadium concierge. How can I assist your stadium experience today? / ¡Bienvenido! ¿Cómo puedo ayudarte hoy?</div>
             <div class="msg user">My grandfather is with me and uses a wheelchair. We are at Gate B, where is the closest accessible restroom?</div>
             <div class="msg bot">♿ Navigating step-free for you! From Gate B, take the immediate left ramp down towards Concourse Zone 2. The dedicated accessible restroom is right next to Block 104 (less than 50 meters away). Avoid the stairs on the right side!</div>
-        </div>
-        <div class="input-area">
-            <input type="text" placeholder="Ask about gates, accessibility, crowds..." aria-label="Message Input Field">
-            <button aria-label="Send Message Button">Send</button>
-        </div>
-    </div>
+        </section>
+        <form class="input-area" action="#" onsubmit="return false;">
+            <label for="stadium-query-input" style="display: none;">Ask a question</label>
+            <input type="text" id="stadium-query-input" placeholder="Ask about gates, accessibility, crowds..." aria-label="Message Input Field">
+            <button type="submit" aria-label="Send Message Button">Send</button>
+        </form>
+    </main>
 </body>
 </html>
 
